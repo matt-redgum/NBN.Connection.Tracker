@@ -76,10 +76,28 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("30000")>  _
-        Public ReadOnly Property PingIntervalMilliseconds() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("5000")>  _
+        Public ReadOnly Property PingIntervalMilliseconds() As Integer
             Get
-                Return CType(Me("PingIntervalMilliseconds"),String)
+                Return CType(Me("PingIntervalMilliseconds"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Australia")>  _
+        Public ReadOnly Property SpeedTestDefaultCountry() As String
+            Get
+                Return CType(Me("SpeedTestDefaultCountry"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("30000")>  _
+        Public ReadOnly Property SpeedTestIntervalMilliseconds() As Integer
+            Get
+                Return CType(Me("SpeedTestIntervalMilliseconds"),Integer)
             End Get
         End Property
     End Class

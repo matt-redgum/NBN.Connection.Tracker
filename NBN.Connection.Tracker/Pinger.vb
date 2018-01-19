@@ -40,27 +40,33 @@ Namespace PingManager
                 Dim autoEvent As AutoResetEvent = CType(stateInfo, AutoResetEvent)
                 'Console.WriteLine("{0} Checking status {1,2}.", DateTime.Now.ToString("h:mm:ss.fff"), (System.Threading.Interlocked.Increment(invokeCount)).ToString())
 
-                Dim pingSender As New Net.NetworkInformation.Ping
-                Dim options As New PingOptions
-
-                options.DontFragment = True
-
-                Dim data As String = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                Dim buffer As Byte() = Encoding.ASCII.GetBytes(data)
-
-                Dim timeout As Integer = 120
-
                 Dim pingResult As New Repository.Ping
+                Try
+                    Dim pingSender As New Net.NetworkInformation.Ping
+                    Dim options As New PingOptions
 
-                Dim reply As PingReply = pingSender.Send(_TargetIpAddress, timeout, buffer, options)
-                If reply.Status = IPStatus.Success Then
-                    pingResult.PingReceived = True
-                    pingResult.RoundTripTime = reply.RoundtripTime
-                Else
-                    'Failed ping
-                    pingResult.PingReceived = False
-                End If
-                Console.WriteLine(String.Format("Ping response: {0} {1}ms", pingResult.PingReceived, pingResult.RoundTripTime))
+                    options.DontFragment = True
+
+                    Dim data As String = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    Dim buffer As Byte() = Encoding.ASCII.GetBytes(data)
+
+                    Dim timeout As Integer = 120
+
+
+
+                    Dim reply As PingReply = pingSender.Send(_TargetIpAddress, timeout, buffer, options)
+                    If reply.Status = IPStatus.Success Then
+                        pingResult.PingReceived = True
+                        pingResult.RoundTripTime = reply.RoundtripTime
+                    Else
+                        'Failed ping
+                        pingResult.PingReceived = False
+                    End If
+                    Console.WriteLine(String.Format("Ping response: {0} {1}ms", pingResult.PingReceived, pingResult.RoundTripTime))
+                Catch ex As Exception
+                    pingResult.PingReceived = 0
+                End Try
+
                 _Repository.WritePing(pingResult)
 
             End Sub

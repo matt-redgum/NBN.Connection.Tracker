@@ -13,12 +13,22 @@
 
     Public Sub WritePing(ping As Ping)
 
-        Using ctx As New NBNContext(_ConnectionString)
+        _Context.Pings.Add(ping)
+        _Context.SaveChanges()
 
-            ctx.Pings.Add(ping)
-            ctx.SaveChanges()
+    End Sub
 
-        End Using
+    Public Sub WriteDownloadSpeed(speed As DownloadSpeedTest)
+
+        _Context.DownloadSpeedTests.Add(speed)
+        _Context.SaveChanges()
+
+    End Sub
+
+    Public Sub WriteUploadSpeed(speed As UploadSpeedTest)
+
+        _Context.UploadSpeedTests.Add(speed)
+        _Context.SaveChanges()
 
     End Sub
 

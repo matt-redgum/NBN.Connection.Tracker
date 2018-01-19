@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Ping.vb" />
+    <Compile Include="Models\TransferSpeed.vb" />
     <Compile Include="NBNContext.vb" />
     <Compile Include="Repository.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

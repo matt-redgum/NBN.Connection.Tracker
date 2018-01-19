@@ -8,5 +8,7 @@ Public Class NBNContext
     End Sub
 
     Public Property Pings As DbSet(Of Ping)
+    Public Property DownloadSpeedTests As DbSet(Of DownloadSpeedTest)
+    Public Property UploadSpeedTests As DbSet(Of UploadSpeedTest)
 
 End Class
