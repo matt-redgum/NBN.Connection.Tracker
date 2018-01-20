@@ -1,8 +1,26 @@
 ﻿@{
     ViewBag.Title = "NBN Tracker";
 }
-
-
+<hr />
+<!-- Recent disconnects-->
+<div class="row">
+    <div class="col-md-12">
+        <h3>Recent Disconnects</h3>
+    </div>
+    <div class="col-md-12">
+        <table id="recentDisconnects">
+            <thead>
+                <tr>
+                    <td>Started</td>
+                    <td>Ended</td>
+                    <td>Duration</td>
+                </tr>
+            </thead>
+            <tbody id="decentDisconnectsBody"></tbody>
+        </table>
+    </div>
+</div>
+<hr />
 <!-- 2 Hours-->
 <div class="row">
     <div class="col-md-12">
@@ -36,7 +54,7 @@
         </p>
     </div>
 </div>
-
+<hr />
 <!-- 24 Hours-->
 
 <div class="row">
@@ -70,7 +88,7 @@
         </p>
     </div>
 </div>
-
+<hr />
 <!-- 3 Days -->
 <div class="row">
     <div class="col-md-12">
@@ -86,9 +104,6 @@
     </div>
 </div>
 
-
-
-
 <div class="row">
     <div class="col-md-12">
         <h5>Downstream Sync Speed (Mbps)</h5>
@@ -97,11 +112,6 @@
         </p>
     </div>
 </div>
-
-
-
-
-
 
 <div class="row">
     <div class="col-md-12">

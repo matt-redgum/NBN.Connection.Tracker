@@ -58,6 +58,42 @@
 
 #End Region
 
+#Region " Recent Disconnections"
+
+    Public Function RetrieveRecentDisconnections(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of DisconnectionInfo)
+
+        Dim pings = _Context.Pings.Where(Function(p) p.PingDateTimeUTC > startDateTime AndAlso p.PingDateTimeUTC < endDateTime).ToList()
+        Dim disconnections As New List(Of DisconnectionInfo)
+
+        Dim currentDisconection As DisconnectionInfo = Nothing
+        Dim lastWasDisconnected As Boolean = False
+        For Each ping In pings
+            If ping.RoundTripTime = 0 Then
+                'This is a disconnect
+                If Not lastWasDisconnected Then
+                    currentDisconection = New DisconnectionInfo
+                    currentDisconection.StartTime = ping.PingDateTimeUTC
+                End If
+
+                lastWasDisconnected = True
+            Else
+                'Received a response
+                If lastWasDisconnected AndAlso currentDisconection IsNot Nothing Then
+                    'Close this info out and add to list
+                    currentDisconection.EndTime = ping.PingDateTimeUTC
+                    Dim duration = currentDisconection.EndTime.Subtract(currentDisconection.StartTime)
+                    currentDisconection.DurationInSeconds = duration.TotalSeconds
+                    If currentDisconection.DurationInSeconds > 30 Then
+                        disconnections.Add(currentDisconection)
+                    End If
+                End If
+                    lastWasDisconnected = False
+            End If
+        Next
+        Return disconnections
+    End Function
+#End Region
+
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls

@@ -16,7 +16,7 @@ namespace NBN.Connection.Web.Controllers.Api
         [Route("pings")]
         [AllowAnonymous]
         [HttpGet]
-        public HttpResponseMessage Ping(string interval) //DateTime startDateTime, DateTime endDateTime)
+        public HttpResponseMessage Pings(string interval)
         {
             DateTime startDateTime = DateTime.UtcNow.AddHours(-2);
             DateTime endDateTime = DateTime.UtcNow;
@@ -44,10 +44,42 @@ namespace NBN.Connection.Web.Controllers.Api
                 
         }
 
+        [Route("disconnects")]
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage Disconnects(string interval)
+        {
+            DateTime startDateTime = DateTime.UtcNow.AddHours(-2);
+            DateTime endDateTime = DateTime.UtcNow;
+
+            switch (interval)
+            {
+                case "24h":
+                    startDateTime = DateTime.UtcNow.AddHours(-24);
+                    break;
+                case "3d":
+                    startDateTime = DateTime.UtcNow.AddDays(-3);
+                    break;
+                case "7d":
+                    startDateTime = DateTime.UtcNow.AddDays(-7);
+                    break;
+                default:
+                    break;
+            }
+            using (var repo = new NBNRepository(NBN.Connection.Web.Properties.Settings.Default.DBConnectionString))
+            {
+                var result = repo.RetrieveRecentDisconnections(startDateTime, endDateTime);
+
+                return Request.CreateResponse<IEnumerable<DisconnectionInfo>>(HttpStatusCode.OK, result);
+            }
+
+        }
+
+
         [Route("downloadtests")]
         [AllowAnonymous]
         [HttpGet]
-        public HttpResponseMessage DownloadTests(string interval) //DateTime startDateTime, DateTime endDateTime)
+        public HttpResponseMessage DownloadTests(string interval)
         {
             DateTime startDateTime = DateTime.UtcNow.AddHours(-2);
             DateTime endDateTime = DateTime.UtcNow;
@@ -78,7 +110,7 @@ namespace NBN.Connection.Web.Controllers.Api
         [Route("uploadtests")]
         [AllowAnonymous]
         [HttpGet]
-        public HttpResponseMessage UploadTests(string interval) //DateTime startDateTime, DateTime endDateTime)
+        public HttpResponseMessage UploadTests(string interval)
         {
             DateTime startDateTime = DateTime.UtcNow.AddHours(-2);
             DateTime endDateTime = DateTime.UtcNow;

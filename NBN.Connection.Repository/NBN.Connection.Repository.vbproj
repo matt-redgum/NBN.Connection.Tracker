@@ -70,6 +70,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DisconnectionInfo.vb" />
     <Compile Include="Models\Ping.vb" />
     <Compile Include="Models\TransferSpeed.vb" />
     <Compile Include="NBNContext.vb" />
