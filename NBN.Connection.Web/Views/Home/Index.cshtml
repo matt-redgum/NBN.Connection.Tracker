@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "NBN Tracker";
+}
+
+
+<!-- 2 Hours-->
+<div class="row">
+    <div class="col-md-12">
+        <h3>Last 2 Hours</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Ping Times (ms)</h3>
+        <p>
+            <canvas id="last2HoursPing" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Downstream Sync Speed (Mbps)</h3>
+        <p>
+            <canvas id="last2HoursDownSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Upstream Sync Speed (Mbps)</h3>
+        <p>
+            <canvas id="last2HoursUpSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+<!-- 24 Hours-->
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Last 24 Hours</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h5>Ping Times (ms)</h5>
+        <p>
+            <canvas id="last24HoursPing" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Downstream Sync Speed (Mbps)</h5>
+        <p>
+            <canvas id="last24HoursDownSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Upstream Sync Speed (Mbps)</h5>
+        <p>
+            <canvas id="last24HoursUpSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+<!-- 3 Days -->
+<div class="row">
+    <div class="col-md-12">
+        <h3>Last 3 Days</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h5>Ping Times (ms)</h5>
+        <p>
+            <canvas id="last3DaysPing" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Downstream Sync Speed (Mbps)</h5>
+        <p>
+            <canvas id="last3DaysDownSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Upstream Sync Speed (Mbps)</h5>
+        <p>
+            <canvas id="last3DaysUpSync" height="30"></canvas>
+        </p>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/d3/d3.js", "~/Scripts/nv.d3.js", "~/Scripts/Chart.min.js");
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log('Ready document message');
+
+            getPingTimes('2h', $('#last2HoursPing'));
+            getSpeeds('2h', $('#last2HoursDownSync'), true);
+            getSpeeds('2h', $('#last2HoursUpSync'), false);
+
+            getPingTimes('24h', $('#last24HoursPing'));
+            getSpeeds('24h', $('#last24HoursDownSync'), true);
+            getSpeeds('24h', $('#last24HoursUpSync'), false);
+
+            getPingTimes('3d', $('#last3DaysPing'));
+            getSpeeds('3d', $('#last3DaysDownSync'), true);
+            getSpeeds('3d', $('#last3DaysUpSync'), false);
+        });
+
+
+        function getPingTimes(interval, pingChart) {
+            var url = '@Model.SiteRoot/api/v1/statistics/pings?interval=' + interval;
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                cache: false
+            })
+                .done(function (data) {
+                    console.log(data);
+
+                    var items = data;
+                    var graphOptions = {
+                        scales: {
+                            xAxes: [{
+                                display: false
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false,
+                            labels: { display: false }
+                        }
+                    };
+
+                    var pChart = new Chart(pingChart, {
+                        type: 'bar',
+                        options: graphOptions,
+                        label: "Ping Times",
+                        data: {
+                            labels: items.map(function (v) { return v.PingDateTimeUTC }),
+                            datasets: [{
+                                backgroundColor: '#ff6384',
+                                data: items.map(function (v) { return v.RoundTripTime })
+
+                            }]
+                        }
+                    })
+
+                })
+        }
+
+        function getSpeeds(interval, speedChart, isDownstream) {
+
+            var url = '@Model.SiteRoot/api/v1/statistics/downloadtests?interval=' + interval;
+            var directionLabel = 'Down';
+            var barColour = '#A1D490';
+            if (!isDownstream)
+            {
+                url = '@Model.SiteRoot/api/v1/statistics/uploadtests?interval=' + interval;
+                directionLabel = 'Up';
+                var barColour = '#90C3D4';
+            }
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                cache: false
+            })
+                .done(function (data) {
+                    console.log(data);
+
+                    var items = data;
+                    var graphOptions = {
+                        scales: {
+                            xAxes: [{
+                                display: false
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false,
+                            labels: { display: false }
+                        }
+                    };
+
+                    var pChart = new Chart(speedChart, {
+                        type: 'bar',
+                        options: graphOptions,
+                        label: directionLabel + " Sync Speed",
+                        data: {
+                            labels: items.map(function (v) { return v.SpeedTestDateTimeUTC }),
+                            datasets: [{
+                                backgroundColor: barColour,
+                                data: items.map(function (v) { return v.TransferSpeedKbps / 1024 })
+
+                            }]
+                        }
+                    })
+
+                })
+        }
+
+
+
+    </script>
+}

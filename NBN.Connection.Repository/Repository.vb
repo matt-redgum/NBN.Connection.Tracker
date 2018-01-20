@@ -11,6 +11,7 @@
 
     End Sub
 
+#Region " Ping"
     Public Sub WritePing(ping As Ping)
 
         _Context.Pings.Add(ping)
@@ -18,6 +19,15 @@
 
     End Sub
 
+    Public Function RetrievePings(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of Ping)
+
+        Return _Context.Pings.Where(Function(p) p.PingDateTimeUTC > startDateTime AndAlso p.PingDateTimeUTC < endDateTime).ToList()
+
+    End Function
+
+#End Region
+
+#Region " Download Speed"
     Public Sub WriteDownloadSpeed(speed As DownloadSpeedTest)
 
         _Context.DownloadSpeedTests.Add(speed)
@@ -25,12 +35,29 @@
 
     End Sub
 
+    Public Function RetrieveDownloadSpeeds(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of DownloadSpeedTest)
+
+        Return _Context.DownloadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
+
+    End Function
+#End Region
+
+#Region " Upload Speed"
     Public Sub WriteUploadSpeed(speed As UploadSpeedTest)
 
         _Context.UploadSpeedTests.Add(speed)
         _Context.SaveChanges()
 
     End Sub
+
+    Public Function RetrieveUploadSpeeds(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of UploadSpeedTest)
+
+        Return _Context.UploadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
+
+    End Function
+
+#End Region
+
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls

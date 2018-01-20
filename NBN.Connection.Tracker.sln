@@ -7,6 +7,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NBN.Connection.Tracker", "N
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NBN.Connection.Repository", "NBN.Connection.Repository\NBN.Connection.Repository.vbproj", "{5B126425-D198-4E2C-8B6A-97457571D003}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBN.Connection.Web", "NBN.Connection.Web\NBN.Connection.Web.csproj", "{D1A96EFC-03BB-4771-A996-85CA00EA46A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5B126425-D198-4E2C-8B6A-97457571D003}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B126425-D198-4E2C-8B6A-97457571D003}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B126425-D198-4E2C-8B6A-97457571D003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A96EFC-03BB-4771-A996-85CA00EA46A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A96EFC-03BB-4771-A996-85CA00EA46A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A96EFC-03BB-4771-A996-85CA00EA46A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A96EFC-03BB-4771-A996-85CA00EA46A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

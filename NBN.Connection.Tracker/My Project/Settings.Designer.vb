@@ -76,7 +76,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("5000")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("30000")>  _
         Public ReadOnly Property PingIntervalMilliseconds() As Integer
             Get
                 Return CType(Me("PingIntervalMilliseconds"),Integer)
@@ -94,7 +94,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("30000")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("600000")>  _
         Public ReadOnly Property SpeedTestIntervalMilliseconds() As Integer
             Get
                 Return CType(Me("SpeedTestIntervalMilliseconds"),Integer)
