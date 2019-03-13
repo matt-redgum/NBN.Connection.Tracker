@@ -15,13 +15,22 @@
     Public Sub WritePing(ping As Ping)
 
         _Context.Pings.Add(ping)
-        _Context.SaveChanges()
-
+        Try
+            _Context.SaveChanges()
+        Catch ex As Exception
+            'Just ignore the exception I guess. We drop this ping and move on
+        End Try
     End Sub
+
 
     Public Function RetrievePings(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of Ping)
 
-        Return _Context.Pings.Where(Function(p) p.PingDateTimeUTC > startDateTime AndAlso p.PingDateTimeUTC < endDateTime).ToList()
+        Dim pings = _Context.Pings.Where(Function(p) p.PingDateTimeUTC > startDateTime AndAlso p.PingDateTimeUTC < endDateTime).ToList()
+        Dim pingsConverted = pings.Select(Of Ping)(Function(p) New Ping() With {.PingId = p.PingId,
+                                                       .PingReceived = p.PingReceived,
+                                                       .RoundTripTime = p.RoundTripTime,
+                                                       .PingDateTimeUTC = p.PingDateTimeUTC.ToLocalTime})
+        Return pings
 
     End Function
 
@@ -31,14 +40,21 @@
     Public Sub WriteDownloadSpeed(speed As DownloadSpeedTest)
 
         _Context.DownloadSpeedTests.Add(speed)
-        _Context.SaveChanges()
-
+        Try
+            _Context.SaveChanges()
+        Catch ex As Exception
+            'Just ignore the exception I guess. We drop this ping and move on
+        End Try
     End Sub
 
     Public Function RetrieveDownloadSpeeds(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of DownloadSpeedTest)
 
-        Return _Context.DownloadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
-
+        Dim dst = _Context.DownloadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
+        Dim dstConverted = dst.Select(Of DownloadSpeedTest)(Function(d) New DownloadSpeedTest() With {.DownloadSpeedTestId = d.DownloadSpeedTestId,
+                                                                .TransferSpeedKbps = d.TransferSpeedKbps,
+                                                                .ResultReceived = d.ResultReceived,
+                                                                .SpeedTestDateTimeUTC = d.SpeedTestDateTimeUTC.ToLocalTime})
+        Return dstConverted
     End Function
 #End Region
 
@@ -46,14 +62,21 @@
     Public Sub WriteUploadSpeed(speed As UploadSpeedTest)
 
         _Context.UploadSpeedTests.Add(speed)
-        _Context.SaveChanges()
-
+        Try
+            _Context.SaveChanges()
+        Catch ex As Exception
+            'Just ignore the exception I guess. We drop this ping and move on
+        End Try
     End Sub
 
     Public Function RetrieveUploadSpeeds(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of UploadSpeedTest)
 
-        Return _Context.UploadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
-
+        Dim ust = _Context.DownloadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
+        Dim ustConverted = ust.Select(Of UploadSpeedTest)(Function(d) New UploadSpeedTest() With {.UploadSpeedTestId = d.DownloadSpeedTestId,
+                                                                .TransferSpeedKbps = d.TransferSpeedKbps,
+                                                                .ResultReceived = d.ResultReceived,
+                                                                .SpeedTestDateTimeUTC = d.SpeedTestDateTimeUTC.ToLocalTime})
+        Return ustConverted
     End Function
 
 #End Region
@@ -68,11 +91,12 @@
         Dim currentDisconection As DisconnectionInfo = Nothing
         Dim lastWasDisconnected As Boolean = False
         For Each ping In pings
+
             If ping.RoundTripTime = 0 Then
                 'This is a disconnect
                 If Not lastWasDisconnected Then
                     currentDisconection = New DisconnectionInfo
-                    currentDisconection.StartTime = ping.PingDateTimeUTC
+                    currentDisconection.StartTime = ping.PingDateTimeUTC.ToLocalTime
                 End If
 
                 lastWasDisconnected = True
@@ -80,14 +104,14 @@
                 'Received a response
                 If lastWasDisconnected AndAlso currentDisconection IsNot Nothing Then
                     'Close this info out and add to list
-                    currentDisconection.EndTime = ping.PingDateTimeUTC
+                    currentDisconection.EndTime = ping.PingDateTimeUTC.ToLocalTime
                     Dim duration = currentDisconection.EndTime.Subtract(currentDisconection.StartTime)
                     currentDisconection.DurationInSeconds = duration.TotalSeconds
                     If currentDisconection.DurationInSeconds > 30 Then
                         disconnections.Add(currentDisconection)
                     End If
                 End If
-                    lastWasDisconnected = False
+                lastWasDisconnected = False
             End If
         Next
         Return disconnections
