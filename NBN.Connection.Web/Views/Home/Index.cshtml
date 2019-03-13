@@ -147,7 +147,7 @@
 
 
         function getPingTimes(interval, pingChart) {
-            var url = '@Model.SiteRoot/api/v1/statistics/pings?interval=' + interval;
+            var url = '@Model.SiteRoot' + 'api/v1/statistics/pings?interval=' + interval;
 
             $.ajax({
                 type: 'GET',
@@ -195,12 +195,12 @@
 
         function getSpeeds(interval, speedChart, isDownstream) {
 
-            var url = '@Model.SiteRoot/api/v1/statistics/downloadtests?interval=' + interval;
+            var url = '@Model.SiteRoot' + 'api/v1/statistics/downloadtests?interval=' + interval;
             var directionLabel = 'Down';
             var barColour = '#A1D490';
             if (!isDownstream)
             {
-                url = '@Model.SiteRoot/api/v1/statistics/uploadtests?interval=' + interval;
+                url = '@Model.SiteRoot' + 'api/v1/statistics/uploadtests?interval=' + interval;
                 directionLabel = 'Up';
                 var barColour = '#90C3D4';
             }
