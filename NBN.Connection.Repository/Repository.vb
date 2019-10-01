@@ -71,8 +71,8 @@
 
     Public Function RetrieveUploadSpeeds(startDateTime As DateTime, endDateTime As DateTime) As IEnumerable(Of UploadSpeedTest)
 
-        Dim ust = _Context.DownloadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
-        Dim ustConverted = ust.Select(Of UploadSpeedTest)(Function(d) New UploadSpeedTest() With {.UploadSpeedTestId = d.DownloadSpeedTestId,
+        Dim ust = _Context.UploadSpeedTests.Where(Function(p) p.SpeedTestDateTimeUTC > startDateTime AndAlso p.SpeedTestDateTimeUTC < endDateTime).ToList()
+        Dim ustConverted = ust.Select(Of UploadSpeedTest)(Function(d) New UploadSpeedTest() With {.UploadSpeedTestId = d.UploadSpeedTestId,
                                                                 .TransferSpeedKbps = d.TransferSpeedKbps,
                                                                 .ResultReceived = d.ResultReceived,
                                                                 .SpeedTestDateTimeUTC = d.SpeedTestDateTimeUTC.ToLocalTime})
@@ -117,7 +117,6 @@
         Return disconnections
     End Function
 #End Region
-
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
